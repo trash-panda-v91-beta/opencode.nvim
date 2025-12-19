@@ -199,6 +199,9 @@ M.defaults = {
     on_done_thinking = nil,
     on_permission_requested = nil,
   },
+  server = {
+    env = nil, -- Additional environment variables for the server process (table of key-value pairs)
+  },
 }
 
 M.values = vim.deepcopy(M.defaults)

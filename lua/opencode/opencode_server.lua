@@ -64,10 +64,8 @@ end
 function OpencodeServer:spawn(opts)
   opts = opts or {}
 
-  self.job = vim.system({
-    'opencode',
-    'serve',
-  }, {
+  -- Build system options
+  local system_opts = {
     cwd = opts.cwd,
     stdout = function(err, data)
       if err then
@@ -89,7 +87,14 @@ function OpencodeServer:spawn(opts)
         safe_call(opts.on_error, err or data)
       end
     end,
-  }, function(exit_opts)
+  }
+  
+  -- Add custom environment variables if provided
+  if server_config.env and type(server_config.env) == 'table' then
+    system_opts.env = server_config.env
+  end
+
+  self.job = vim.system(cmd, system_opts, function(exit_opts)
     self.job = nil
     self.url = nil
     self.handle = nil
